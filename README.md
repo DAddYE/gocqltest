@@ -8,18 +8,20 @@ $ cd $GOPATH/src/github.com/daddye/gocqltest
 $ make
 ```
 
-This command will create drop/create the keyspace for the test.
+This command will create drop/create the keyspace for and run the test.
 
 ### The Test:
 
-Seems that `prepared` statements [1](https://github.com/gocql/gocql/issues/296) [2](https://groups.google.com/a/lists.datastax.com/forum/#!topic/java-driver-user/cHE3OOSIXBU/discussion) [3](https://issues.apache.org/jira/browse/CASSANDRA-7304)
-(defaults in gocql) suffers of a "bug" where *not* setting a
-*column* means setting it `NULL` which (seems only with prepared statements) causes the creation of
-a tombstone in cassandra.
+Seems that `prepared` statements [[1]](https://github.com/gocql/gocql/issues/296) [[2]](https://groups.google.com/a/lists.datastax.com/forum/#!topic/java-driver-user/cHE3OOSIXBU/discussion) [[3]](https://issues.apache.org/jira/browse/CASSANDRA-7304)
+(defaults in gocql) suffers of a "bug" where *not* setting a *column* means setting it `NULL` which
+causes the creation of a tombstone in cassandra if we do that query with prepared statements.
 
-This problem _seems_ amplified with _arrays_ (slices). Basically an empty slice is `nil` or `null` for cassandra.
+This problem _seems_ amplified with _arrays_ (slices). Basically an empty slice is `nil` for go and
+so `null` for cassandra. Again, if I understood correctly the
+[jira](https://issues.apache.org/jira/browse/CASSANDRA-7304) this in conjunction with prepared
+statements would cause a creation of a tombstone.
 
-The output will be:
+So right now the output will be:
 
 ```
 cqlsh -e "DROP KEYSPACE IF EXISTS gocqltest"
