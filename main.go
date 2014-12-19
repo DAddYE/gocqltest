@@ -16,8 +16,10 @@ func main() {
 	}
 	defer session.Close()
 
+	const rounds = 1000
+
 	// fill before with values
-	for i := 0; i < 10; i++ {
+	for i := 0; i < rounds; i++ {
 		err := session.Query(`
 			INSERT INTO test (id, status, name, categories) VALUES (?, ?, ?, ?)
 		`, i, 1, "test", []string{"test"},
@@ -28,7 +30,7 @@ func main() {
 	}
 
 	// test null values
-	for i := 0; i < 10; i++ {
+	for i := 0; i < rounds; i++ {
 		err := session.Query("INSERT INTO test (id) VALUES (?)", i).Exec()
 		if err != nil {
 			log.Fatalf("first update: %s", err)
@@ -36,7 +38,7 @@ func main() {
 	}
 
 	// test empty slice
-	for i := 0; i < 10; i++ {
+	for i := 0; i < rounds; i++ {
 		err := session.Query("INSERT INTO test (id, categories) VALUES (?, ?)", i, &[]string{}).Exec()
 		if err != nil {
 			log.Fatalf("second update: %s", err)

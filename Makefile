@@ -6,6 +6,7 @@ default: test
 test: setup
 	go run main.go
 	cqlsh -e "SELECT * FROM gocqltest.test"
+	nodetool cfstats gocqltest
 
 setup:
 	cqlsh -e "DROP KEYSPACE IF EXISTS gocqltest"
