@@ -16,6 +16,17 @@ func main() {
 	}
 	defer session.Close()
 
+	// fill before with values
+	for i := 0; i < 10; i++ {
+		err := session.Query(`
+			INSERT INTO test (id, status, name, categories) VALUES (?, ?, ?, ?)
+		`, i, 1, "test", []string{"test"},
+		).Exec()
+		if err != nil {
+			log.Fatalf("insert: %s", err)
+		}
+	}
+
 	// test null values
 	for i := 0; i < 10; i++ {
 		err := session.Query("INSERT INTO test (id) VALUES (?)", i).Exec()
@@ -25,10 +36,10 @@ func main() {
 	}
 
 	// test empty slice
-	for i := 10; i < 20; i++ {
+	for i := 0; i < 10; i++ {
 		err := session.Query("INSERT INTO test (id, categories) VALUES (?, ?)", i, &[]string{}).Exec()
 		if err != nil {
-			log.Fatalf("first update: %s", err)
+			log.Fatalf("second update: %s", err)
 		}
 	}
 }
