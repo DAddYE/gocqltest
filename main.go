@@ -8,7 +8,7 @@ import (
 
 func main() {
 	c := gocql.NewCluster("127.0.0.1")
-	c.Consistency = gocql.LocalOne
+	// c.Consistency = gocql.LocalOne
 	c.Keyspace = "gocqltest"
 	session, err := c.CreateSession()
 	if err != nil {
